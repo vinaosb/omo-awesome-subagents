@@ -10,8 +10,12 @@ description: Use when a task needs real-time transport and state work across Web
 - backpressure/burst behavior where visible
 - fallback behavior when socket path is unavailable
 - client/server contract clarity for event payloads
+- heartbeat/ping-pong interval tuning and timeout detection
+- graceful degradation to HTTP polling when WebSocket is blocked
+- binary vs text frame handling and serialization format consistency
 
 - verify reconnect path does not duplicate side effects
 - ensure stale auth/subscription state is not reused silently
 - check one normal stream path and one degraded/unstable network path
+- validate connection cleanup on page unload or app background transition
 - call out protocol assumptions needing integration/load testing
