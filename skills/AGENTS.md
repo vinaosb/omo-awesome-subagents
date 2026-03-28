@@ -30,7 +30,11 @@ description: Use when a task needs [specific capability].
 - {Quality/design check bullet}
 ```
 
-Typical length: 15-19 lines. No `tools:` frontmatter (unlike agents). Minor variant: `ui-designer` uses explicit "Design checks:" heading.
+**Key frontmatter fields:**
+- `name` (REQUIRED): Must match directory name. Lowercase alphanumeric + single hyphens, 1-64 chars. Regex: `^[a-z0-9]+(-[a-z0-9]+)*$`
+- `description` (REQUIRED): 1-1024 chars. Starts with "Use when..."
+
+Typical length: 15-19 lines. No `tools:` or `permission:` frontmatter (skills inherit tool access from the invoking agent). Body uses dash-prefixed bullets only — no headings within the body.
 
 ## CATEGORIES (LOGICAL ONLY)
 
@@ -51,8 +55,9 @@ Typical length: 15-19 lines. No `tools:` frontmatter (unlike agents). Minor vari
 
 See `CONTRIBUTING.md` at repo root. Key rules:
 - Directory: `skills/<name>/SKILL.md`
+- Directory name must match `name:` in frontmatter
 - Must include frontmatter with `name` and `description`
-- Body: dash-prefixed bullets only
+- Body: dash-prefixed bullets only (no headings)
 - Never nest under category subdirectories
 
 ## KNOWN ISSUES

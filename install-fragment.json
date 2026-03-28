@@ -1,8 +1,7 @@
 {
   "name": "omo-awesome-subagents",
-  "marketplace": "local",
-  "scope": "local",
-  "version": "1.0.0",
-  "installPath": "<REPO_ROOT>",
-  "lastUpdated": "2026-03-27T05:45:31.608161+00:00"
+  "version": "1.1.0",
+  "description": "13 agents + 127 skills for Opencode. Run install.sh (Unix) or install.ps1 (Windows), or manually copy agents/ and skills/ to ~/.config/opencode/",
+  "homepage": "https://github.com/vinaosb/omo-awesome-subagents",
+  "license": "MIT"
 }

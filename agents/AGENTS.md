@@ -10,9 +10,11 @@ All agents follow this template:
 
 ```markdown
 ---
-name: agent-name
 description: Use when a task needs [specific capability].
-tools: read, grep, glob, ...          # ALWAYS present
+mode: subagent
+permission:
+  edit: deny    # deny for reviewers, allow for implementers
+  bash: deny    # deny for reviewers, allow for implementers
 ---
 
 > **Reasoning effort: high**
@@ -38,13 +40,20 @@ tools: read, grep, glob, ...          # ALWAYS present
 Do not {closing constraint referencing "parent agent"}.
 ```
 
+**Key frontmatter fields:**
+- `description` (REQUIRED): Starts with "Use when a task needs..."
+- `mode: subagent`: Makes agents invocable by primary agents and via @ mentions
+- `permission`: Controls tool access. Only `edit`, `bash`, `webfetch`, `skill`, `task` are configurable — all other tools (read, grep, glob, lsp_*) are available by default.
+
+**Note:** `name` is NOT used — Opencode derives the agent name from the filename. `tools` is deprecated — use `permission` instead.
+
 ## AGENT TYPES
 
 - **Reviewer agents** (read-only analysis): code-reviewer, kubernetes-specialist, llm-architect, penetration-tester, security-auditor, terraform-engineer
-  - Tools: `read, grep, glob, lsp_symbols, lsp_diagnostics, lsp_goto_definition, lsp_find_references, lsp_prepare_rename, lsp_rename`
-  - Include `Mode: READ-ONLY` line
+  - Permission: `edit: deny`, `bash: deny`
+  - Include `Mode: READ-ONLY` line in body
 - **Implementer agents** (can modify files): blockchain-developer, cpp-pro, embedded-systems, game-developer, golang-pro, mlops-engineer, rust-engineer
-  - Tools: `read, write, edit, grep, glob, bash, lsp_symbols, lsp_diagnostics, lsp_goto_definition, lsp_find_references, lsp_prepare_rename, lsp_rename`
+  - Permission: `edit: allow`, `bash: allow`
   - No `Mode: READ-ONLY` line (intentional — they implement changes)
 - All agents share: evidence-driven philosophy, safety-first approach, smallest-change principle
 - No agent cross-references another — each is fully self-contained
@@ -53,6 +62,6 @@ Do not {closing constraint referencing "parent agent"}.
 
 See `CONTRIBUTING.md` at repo root. Key rules:
 - File: `agents/<name>.md`
-- Must include frontmatter with `name` and `description`
+- Must include frontmatter with `description`, `mode`, and `permission`
 - Must follow the Working mode / Focus on / Quality checks / Return structure
 - Must end with a "Do not" constraint
