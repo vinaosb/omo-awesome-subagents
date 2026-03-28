@@ -1,73 +1,133 @@
-# Contributing to Awesome Codex Subagents
+# Contributing to OMO Awesome Subagents
 
-Thanks for contributing.
-
-This repository is a curated collection of Codex-native subagents (`.toml` files). Contributions should prioritize practical usefulness, clear scope, and compatibility with official Codex behavior.
+Thanks for contributing! This repository contains 136 specialized subagent definitions that work with both Oh My OpenAgent (plugin format) and OpenAI Codex (TOML format).
 
 ## How to Contribute
 
 ### Add a New Subagent
 
-1. Choose the correct category under `categories/`.
-2. Add one `.toml` file for the new agent.
-3. Update both:
+1. Choose the correct category under `categories/`
+2. Add a `.toml` file for the new agent
+3. Update documentation:
    - `README.md` (main category listing)
-   - `categories/<category>/README.md` (linked bullet + short description)
-4. Keep agent names sorted alphabetically where possible.
-5. Open a PR with the use case and why this agent is distinct.
+   - `categories/<category>/README.md` (category-specific listing)
+4. Keep agent names sorted alphabetically within categories
+5. Open a PR describing the use case and why this agent is distinct
 
 ### Improve an Existing Subagent
 
-1. Keep the role bounded (avoid broad persona text).
-2. Preserve Codex-native format.
-3. Update relevant README descriptions if behavior or intent changed.
-4. Include before/after rationale in your PR.
+1. Keep the role bounded (avoid broad persona text)
+2. Preserve the TOML format
+3. Update relevant README descriptions if behavior changes
+4. Include before/after rationale in your PR
+5. **Re-run the converter** to regenerate plugin output
+
+---
 
 ## Required Agent Format
 
-Each agent must be a valid TOML file and include:
+Each agent must be a valid TOML file with these required fields:
 
-- `name`
-- `description`
-- `developer_instructions`
+```toml
+name = "agent-name"
+description = "When this agent should be invoked"
 
-Common optional fields:
+developer_instructions = """
+[Role and expertise description]
+[Working mode]
+[Focus areas]
+[Quality checks]
+[Return format]
+"""
+```
 
-- `model`
-- `model_reasoning_effort`
-- `sandbox_mode`
-- `mcp_servers`
+### Optional Fields
+
+| Field | Values | Purpose |
+|-------|--------|---------|
+| `model` | `gpt-5.4`, `gpt-5.3-codex-spark` | Model selection |
+| `model_reasoning_effort` | `low`, `medium`, `high` | Reasoning depth |
+| `sandbox_mode` | `read-only`, `workspace-write` | Filesystem access |
+| `mcp_servers` | array of strings | MCP server references |
+
+---
+
+## Platform Compatibility
+
+### Oh My OpenAgent (Plugin Format)
+
+After modifying TOML files, regenerate the plugin:
+
+```bash
+python convert_toml_to_plugin.py
+```
+
+The converter maps TOML fields to plugin markdown format:
+
+| TOML | Plugin |
+|------|--------|
+| `name` | frontmatter `name` |
+| `description` | frontmatter `description` |
+| `model` | frontmatter `model` (prefixed with `openai/`) |
+| `model_reasoning_effort` | blockquote `> **Reasoning effort: X**` |
+| `sandbox_mode = "read-only"` | blockquote `> **Mode: READ-ONLY**` |
+| `developer_instructions` | markdown body |
+
+### OpenAI Codex (TOML Format)
+
+TOML files are used directly. No conversion needed.
+
+---
 
 ## Authoring Quality Bar
 
-`developer_instructions` should be concrete and task-shaped. Use this structure:
+`developer_instructions` should be concrete and task-shaped:
 
-- `Working mode`
-- `Focus on`
-- `Quality checks`
-- `Return`
-- `Do not ... unless explicitly requested by the parent agent.`
+**Recommended structure:**
+- Working mode
+- Focus on
+- Quality checks
+- Return format
+- Do not... unless explicitly requested
 
-Avoid:
-
+**Avoid:**
 - Unsupported tool/platform assumptions
-- Generic roleplay text with no output contract
+- Generic roleplay text without output contracts
 - Scope creep instructions ("always do everything")
+
+---
 
 ## Model and Sandbox Guidance
 
-- Prefer `gpt-5.4` for complex reasoning/review roles.
-- Prefer `gpt-5.3-codex-spark` for lighter search/synthesis roles.
-- Use `read-only` by default for review/research agents.
-- Use `workspace-write` only when the agent must implement changes.
+### Model Selection
 
-## Validation Checklist (Before PR)
+| Model | Use For |
+|-------|---------|
+| `gpt-5.4` | Complex reasoning: architecture reviews, security audits, financial logic |
+| `gpt-5.3-codex-spark` | Fast scanning, synthesis, lighter research tasks |
 
-- All links in `README.md` and category READMEs resolve.
-- New/edited `.toml` files parse correctly.
-- Agent `name` is unique across repository.
-- Main and category READMEs include the new agent.
-- Descriptions stay concise and accurate to current behavior.
+### Sandbox Mode
+
+| Mode | Use For |
+|------|---------|
+| `read-only` | Review/research agents (73 agents) |
+| `workspace-write` | Implementation agents (63 agents) |
+
+---
+
+## Validation Checklist
+
+Before submitting a PR:
+
+- [ ] All links in `README.md` and category READMEs resolve
+- [ ] New/edited `.toml` files parse correctly (`python convert_toml_to_plugin.py --validate`)
+- [ ] Agent `name` is unique across the repository
+- [ ] Main README includes the new agent in the correct category
+- [ ] Category README includes the new agent
+- [ ] Descriptions are concise and accurate
+- [ ] Converter script runs without errors (`python convert_toml_to_plugin.py --dry-run`)
+
+---
 
 ## Pull Request Checklist
 
@@ -75,14 +135,20 @@ Avoid:
 - [ ] Updated main `README.md`
 - [ ] Updated category `README.md`
 - [ ] Verified links and TOML validity
+- [ ] Ran converter script successfully
 - [ ] Included clear PR description and motivation
+
+---
 
 ## Style Notes
 
-- Keep documentation in English.
-- Prefer precise, practical wording over marketing language.
-- Keep descriptions short; keep instructions high-signal.
+- Keep documentation in English
+- Prefer precise, practical wording over marketing language
+- Keep descriptions short; keep instructions high-signal
+- Use consistent formatting across similar agents
+
+---
 
 ## License
 
-By contributing, you agree your contributions are provided under the repository license terms.
+By contributing, you agree your contributions are provided under the repository's MIT License terms.

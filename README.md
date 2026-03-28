@@ -1,118 +1,131 @@
-<a href="https://github.com/VoltAgent/voltagent">
-    <img width="1500" height="500" alt="codex" src="https://github.com/user-attachments/assets/35f56654-e3e7-4023-a7d5-acd5215455de" />
-</a>
+# OMO Awesome Subagents
 
-<br />
-<br />
+A collection of **136 specialized subagent definitions** across 10 categories, designed for Oh My OpenAgent with OpenAI Codex compatibility.
 
-<div align="center">
-    <strong>The awesome collection of 136+ Codex subagents across 10 categories.</strong>
-    <br />
-    <br />
-</div>
+## Quick Start (Oh My OpenAgent)
 
-   
-<div align="center">
-    
-[![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
-![Subagent Count](https://img.shields.io/badge/subagents-136-blue?style=classic)
-[![Last Update](https://img.shields.io/github/last-commit/VoltAgent/awesome-codex-subagents?label=Last%20update&style=classic)](https://github.com/VoltAgent/awesome-codex-subagents)
-[![Discord](https://img.shields.io/discord/1361559153780195478.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://s.voltagent.dev/discord)
+### 1. Generate the Plugin
 
-<br />
-
-
-<div align="center">
-    <strong>More awesome collections for developers</strong>
-    <br />
-    <br />
-</div>
-
-[![Agent Skills](https://img.shields.io/static/v1?label=%E2%9A%A1%20Agent&message=Skills%2012k&color=black&style=classic)](https://github.com/VoltAgent/awesome-agent-skills)
-[![Claude Code Subagents](https://img.shields.io/static/v1?label=Claude&message=Code%20Subagents%2014k&color=D97757&style=classic&logo=claude&logoColor=D97757)](https://github.com/VoltAgent/awesome-claude-code-subagents)
-[![OpenClaw Skills](https://img.shields.io/static/v1?label=%F0%9F%A6%9E%20OpenClaw&message=Skills%2040k&color=f53e36&style=classic)](https://github.com/VoltAgent/awesome-openclaw-skills)
-[![AI Agent Papers](https://img.shields.io/static/v1?label=arxiv&message=Agent%20Papers%20328&color=b31b1b&style=classic&logo=arxiv)](https://github.com/VoltAgent/awesome-ai-agent-papers)
-</div>
-
-
-# Awesome Codex Subagents
-
-This repository serves as the definitive collection of [Codex Subagents](https://developers.openai.com/codex/subagents), specialized AI assistants designed for specific development tasks. Written specifically for Codex and aligned with the official docs.
-
-## Installation
-
-Use Codex custom agent directories exactly as documented:
-
-- `~/.codex/agents/` for global agents (available in all projects)
-- `.codex/agents/` for project-specific agents (higher precedence in that repo)
-
-1. Clone this repository.
-2. Copy the `.toml` agent files you want into one of the directories above.
-3. Restart or refresh your Codex session if needed.
-4. Delegate explicitly in prompts (Codex does not auto-spawn custom subagents).
-
-Examples:
 ```bash
-mkdir -p ~/.codex/agents
-cp categories/01-core-development/backend-developer.toml ~/.codex/agents/
+python convert_toml_to_plugin.py
 ```
 
+This creates the `plugin-output/` directory with the plugin structure.
+
+### 2. Register the Plugin
+
+Add the contents of `plugin-output/install-fragment.json` to `~/.claude/plugins/installed_plugins.json`:
+
+```json
+{
+  "omo-awesome-subagents": {
+    "path": "/path/to/omo-awesome-subagents/plugin-output",
+    "enabled": true
+  }
+}
+```
+
+### 3. Use the Agents
+
+Agents are namespaced as `omo-awesome-subagents:agent-name`:
+
+```python
+task(
+    subagent_type="omo-awesome-subagents:code-reviewer",
+    run_in_background=True,
+    description="Review code quality",
+    prompt="Review the authentication module for security issues"
+)
+```
+
+## Plugin Structure
+
+```
+plugin-output/
+  .claude-plugin/
+    plugin.json          # Plugin metadata
+  agents/
+    *.md                 # 136 agent definitions
+  README.md              # Plugin-specific docs
+  install-fragment.json  # Registration entry
+```
+
+### Agent Format
+
+Each agent is a markdown file with frontmatter:
+
+```markdown
+---
+name: code-reviewer
+description: Use when a task needs a broader code-health review...
+model: openai/gpt-5.4
+---
+
+> **Reasoning effort: high**
+> **Mode: READ-ONLY** — You must not modify any files.
+
+Own code quality review work as evidence-driven quality...
+```
+
+### Field Mapping (TOML → Plugin)
+
+| TOML Field | Plugin Field | Notes |
+|------------|--------------|-------|
+| `name` | frontmatter `name` | Agent identifier |
+| `description` | frontmatter `description` | When to invoke |
+| `model` | frontmatter `model` | Prefixed with `openai/` |
+| `model_reasoning_effort` | blockquote directive | `> **Reasoning effort: high**` |
+| `sandbox_mode = "read-only"` | blockquote directive | `> **Mode: READ-ONLY**` |
+| `developer_instructions` | markdown body | Agent prompt content |
+
+---
+
+## OpenAI Codex Installation
+
+For OpenAI Codex, use the TOML files directly:
+
 ```bash
+# Global installation
+mkdir -p ~/.codex/agents
+cp categories/01-core-development/backend-developer.toml ~/.codex/agents/
+
+# Project-specific installation
 mkdir -p .codex/agents
 cp categories/04-quality-security/reviewer.toml .codex/agents/
 ```
 
-If you use agent configuration in Codex, keep it in `.codex/config.toml` under `[agents]` as described in the official docs.
-
-
-### Subagent Storage Locations
+### Storage Locations
 
 | Type | Path | Availability | Precedence |
 |------|------|--------------|------------|
-| Project Subagents | `.codex/agents/` | Current project only | Higher |
-| Global Subagents | `~/.codex/agents/` | All projects | Lower |
+| Project | `.codex/agents/` | Current project | Higher |
+| Global | `~/.codex/agents/` | All projects | Lower |
 
-Note: When naming conflicts occur, project-specific subagents override global ones.
+---
 
+## Smart Model Routing
 
-## Subagent Structure
+Each subagent includes a `model` field for optimal performance:
 
-Each subagent uses a Codex-native `.toml` format:
+| Model | Use Case | Examples |
+|-------|----------|----------|
+| `gpt-5.4` | Deep reasoning: architecture reviews, security audits, financial logic | `security-auditor`, `architect-reviewer`, `fintech-engineer` |
+| `gpt-5.3-codex-spark` | Fast scanning, synthesis, lighter research | `search-specialist`, `docs-researcher`, `agent-installer` |
 
-```toml
-name = "subagent-name"
-description = "When this agent should be invoked"
-model = "gpt-5.3-codex-spark"
-model_reasoning_effort = "medium"
-sandbox_mode = "read-only"
+---
 
-[instructions]
-text = """
-You are a [role description and expertise areas]...
+## Sandbox Modes
 
-[Agent-specific checklists, patterns, and guidelines]...
-"""
-```
+| Mode | Count | Purpose |
+|------|-------|---------|
+| `read-only` | 73 agents | Analyze without modifying (reviewers, auditors) |
+| `workspace-write` | 63 agents | Create and modify files (developers, engineers) |
 
-### Smart Model Routing
-
-Each subagent includes a `model` field that automatically routes it to the right model -- balancing quality and cost:
-
-| Model | When It's Used | Examples |
-|-------|----------------|----------|
-| `gpt-5.4` | Deep reasoning -- architecture reviews, security audits, financial logic | `security-auditor`, `architect-reviewer`, `fintech-engineer` |
-| `gpt-5.3-codex-spark` | Fast scanning, synthesis, and lighter research tasks | `search-specialist`, `docs-researcher`, `agent-installer` |
-
-### Sandbox Mode Philosophy
-
-Each subagent's `sandbox_mode` field controls filesystem access:
-- **Read-only agents** (reviewers, auditors): `sandbox_mode = "read-only"` - analyze without modifying
-- **Workspace-write agents** (developers, engineers): `sandbox_mode = "workspace-write"` - create and modify files
-
+---
 
 ## Categories
 
-### [01. Core Development](categories/01-core-development/)
+### [01. Core Development](categories/01-core-development/) — 12 agents
 
 Essential development subagents for everyday coding tasks.
 
@@ -129,9 +142,10 @@ Essential development subagents for everyday coding tasks.
 - [**ui-fixer**](categories/01-core-development/ui-fixer.toml) - Smallest safe patch for reproduced UI issues
 - [**websocket-engineer**](categories/01-core-development/websocket-engineer.toml) - Real-time communication specialist
 
-### [02. Language Specialists](categories/02-language-specialists/)
+### [02. Language Specialists](categories/02-language-specialists/) — 27 agents
 
 Language-specific experts with deep framework knowledge.
+
 - [**angular-architect**](categories/02-language-specialists/angular-architect.toml) - Angular 15+ enterprise patterns expert
 - [**cpp-pro**](categories/02-language-specialists/cpp-pro.toml) - C++ performance expert
 - [**csharp-developer**](categories/02-language-specialists/csharp-developer.toml) - .NET ecosystem specialist
@@ -160,8 +174,7 @@ Language-specific experts with deep framework knowledge.
 - [**typescript-pro**](categories/02-language-specialists/typescript-pro.toml) - TypeScript specialist
 - [**vue-expert**](categories/02-language-specialists/vue-expert.toml) - Vue 3 Composition API expert
 
-
-### [03. Infrastructure](categories/03-infrastructure/)
+### [03. Infrastructure](categories/03-infrastructure/) — 16 agents
 
 DevOps, cloud, and deployment specialists.
 
@@ -287,7 +300,7 @@ DevOps, cloud, and deployment specialists.
 </details>
 
 <details>
-<summary><b>09. Meta & Orchestration</b> — Agent coordination and meta-programming (12 agents)</summary>
+<summary><b>09. Meta & Orchestration</b> — Agent coordination and meta-programming (11 agents)</summary>
 
 ### [09. Meta & Orchestration](categories/09-meta-orchestration/)
 
@@ -320,60 +333,76 @@ DevOps, cloud, and deployment specialists.
 
 </details>
 
+---
+
 ## Understanding Subagents
 
-Subagents are specialized AI assistants that enhance Codex's capabilities by providing task-specific expertise. They act as dedicated helpers that Codex can call upon when encountering particular types of work.
-
-### What Makes Subagents Special?
-
-**Independent Context Windows**
-Every subagent operates within its own isolated context space, preventing cross-contamination between different tasks and maintaining clarity in the primary conversation thread.
-
-**Domain-Specific Intelligence**
-Subagents come equipped with carefully crafted instructions tailored to their area of expertise, resulting in superior performance on specialized tasks.
-
-**Shared Across Projects**
-After creating a subagent, you can utilize it throughout various projects and distribute it among team members to ensure consistent development practices.
-
-**Explicit Delegation**
-Codex does not spawn subagents automatically. Use explicit delegation prompts to specify which agents to spawn, how to divide the work, and what shape the result should take.
+Subagents are specialized AI assistants that provide task-specific expertise. They operate within isolated context windows, preventing cross-contamination between tasks.
 
 ### Core Advantages
 
-- **Memory Efficiency**: Isolated contexts prevent the main conversation from becoming cluttered with task-specific details
-- **Enhanced Accuracy**: Specialized prompts and configurations lead to better results in specific domains
-- **Workflow Consistency**: Team-wide subagent sharing ensures uniform approaches to common tasks
-- **Codex-Native**: Uses `.toml` agent files aligned with official Codex subagent docs
+- **Memory Efficiency**: Isolated contexts prevent main conversation clutter
+- **Enhanced Accuracy**: Specialized prompts yield better domain-specific results
+- **Workflow Consistency**: Team-wide sharing ensures uniform approaches
+- **Explicit Delegation**: Control when and how agents are invoked
 
 ### Example Workflows
 
 **PR review workflow:**
 ```text
-Review this branch with parallel subagents. Have reviewer look for correctness, security, and missing tests. Have docs_researcher verify the framework APIs this patch depends on. Wait for both and summarize the findings with file references.
+Review this branch with parallel subagents. Have reviewer look for correctness, security, and missing tests. Have docs-researcher verify the framework APIs this patch depends on. Wait for both and summarize the findings with file references.
 ```
 
 **Bug investigation workflow:**
 ```text
-Investigate the broken settings flow. Have code_mapper trace the owning code paths, browser_debugger reproduce the bug in the browser, and frontend_developer propose the smallest fix after the failure is understood. Wait for the read-heavy agents first, then continue.
+Investigate the broken settings flow. Have code-mapper trace the owning code paths, browser-debugger reproduce the bug, and frontend-developer propose the smallest fix. Wait for the read-heavy agents first, then continue.
 ```
 
-**Repo exploration and planning workflow:**
+**Repo exploration workflow:**
 ```text
-Use search_specialist to locate the code related to payment retries, knowledge_synthesizer to summarize the current design, and refactoring_specialist to propose a minimal refactor plan. Return a concrete action list.
+Use search-specialist to locate payment retry code, knowledge-synthesizer to summarize the design, and refactoring-specialist to propose a minimal refactor plan. Return a concrete action list.
 ```
+
+---
+
+## Converter Script
+
+The `convert_toml_to_plugin.py` script transforms TOML agents into Oh My OpenAgent plugin format.
+
+### Requirements
+
+- Python 3.11+
+- Uses built-in `tomllib` and `yaml` modules
+
+### Usage
+
+```bash
+# Generate plugin output
+python convert_toml_to_plugin.py
+
+# Preview without writing
+python convert_toml_to_plugin.py --dry-run
+
+# Validate TOML files only
+python convert_toml_to_plugin.py --validate
+```
+
+### Behavior
+
+- **Idempotent**: Cleans and regenerates `plugin-output/` on each run
+- **Source**: Reads from `categories/` (136 TOML files in 10 category directories)
+- **Output**: Writes to `plugin-output/` (gitignored, regenerable)
+
+---
+
 ## Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on adding or improving agents.
 
-- Submit new subagents via PR
-- Improve existing definitions
-- Report issues and bugs
-
+---
 
 ## License
 
-MIT License - see [LICENSE](LICENSE)
+[MIT License](LICENSE)
 
-This repository is a curated collection of subagent definitions contributed by both the maintainers and the community. All subagents are provided "as is" without warranty. We do not audit or guarantee the security or correctness of any subagent. Review before use, the maintainers accept no liability for any issues arising from their use.
-
-If you find an issue with a listed subagent or want your contribution removed, please open an issue in this repository and we'll address it promptly.
+All subagents are provided "as is" without warranty. Review before use. The maintainers accept no liability for issues arising from their use.
