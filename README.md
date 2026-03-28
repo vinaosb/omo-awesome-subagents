@@ -1,118 +1,149 @@
-# omo-awesome-subagents Plugin
+# omo-awesome-subagents
 
-A collection of **13 flagship subagents + 127 skills** for Oh My OpenAgent (OMO) and Opencode.
+A collection of 13 flagship subagents and 127 skills for Oh My OpenAgent (OMO) and Opencode.
 
 ## Quick Start
 
-1. Clone this repository
-2. Register the plugin in your OMO/Opencode configuration:
-   ```json
-   {
-     "omo-awesome-subagents": {
-       "path": "/path/to/omo-awesome-subagents",
-       "enabled": true
-     }
-   }
-   ```
-3. Restart your OMO/Opencode session
+### Step 1: Clone the repo
 
-## Architecture Overview
+```bash
+git clone https://github.com/vinaosb/omo-awesome-subagents.git
+```
 
-This plugin provides two distinct types of agent definitions:
+### Step 2: Register the plugin
 
-- **Flagship Agents** (13): Callable subagents invoked via `task(subagent_type="omo-awesome-subagents:name")`. These are the most powerful and commonly-used agents, each with full reasoning capabilities.
+Copy this into your OMO plugin config (`~/.claude/plugins/installed_plugins.json`):
 
-- **Skills** (127): Injectable knowledge modules loaded via `skill("omo-awesome-subagents:name")` or `load_skills=["omo-awesome-subagents:name"]` in task configurations. Skills provide specialized instructions without spawning separate agents.
+**Windows example:**
+```json
+{
+  "name": "omo-awesome-subagents",
+  "marketplace": "local",
+  "scope": "local",
+  "version": "1.0.0",
+  "installPath": "C:\\Users\\you\\omo-awesome-subagents",
+  "lastUpdated": "2026-03-27T05:45:31.608161+00:00"
+}
+```
 
-All flagship agents ALSO have skill versions available, giving you flexibility in how you use them.
+**macOS/Linux example:**
+```json
+{
+  "name": "omo-awesome-subagents",
+  "marketplace": "local",
+  "scope": "local",
+  "version": "1.0.0",
+  "installPath": "/home/you/omo-awesome-subagents",
+  "lastUpdated": "2026-03-27T05:45:31.608161+00:00"
+}
+```
 
-## Flagship Agents
+Replace the `installPath` with your actual clone location. The `install-fragment.json` file in this repo uses `<REPO_ROOT>` as a placeholder.
 
-The 13 flagship agents are the primary callable subagents:
+### Step 3: Restart your OMO/Opencode session
 
-- `blockchain-developer`
-- `code-reviewer`
-- `cpp-pro`
-- `embedded-systems`
-- `game-developer`
-- `golang-pro`
-- `kubernetes-specialist`
-- `llm-architect`
-- `mlops-engineer`
-- `penetration-tester`
-- `rust-engineer`
-- `security-auditor`
-- `terraform-engineer`
+Close and reopen your terminal, or restart the OMO service.
 
-## Skill Companions
+### Step 4: Verify installation
 
-All 127 agents (including the 13 flagships) are available as skills. Skills are useful when you want to inject specialized knowledge into an existing agent session rather than spawning a new subagent.
+Try invoking an agent to confirm the plugin loaded:
 
-Load a skill in your task configuration:
+```
+task(subagent_type="omo-awesome-subagents:code-reviewer", prompt="Review this codebase")
+```
+
+## Usage Examples
+
+### Invoking a Flagship Agent
+
 ```
 task(
-    prompt="...",
+    subagent_type="omo-awesome-subagents:code-reviewer",
+    prompt="Review the authentication module for security issues"
+)
+```
+
+### Using a Skill in a Task
+
+```
+task(
+    prompt="Refactor this Python module for better testability",
     load_skills=["omo-awesome-subagents:python-pro"]
 )
 ```
 
-## Installation
-
-1. Copy the contents of `install-fragment.json` into the `installed_plugins` array in `~/.claude/plugins/installed_plugins.json`.
-2. Restart oh-my-openagent. The plugin loader will discover the agents automatically.
-
-Alternatively, place the entire repository directory where your plugin loader expects it and register it manually.
-
-## Agent Namespacing
-
-All agents are namespaced under the plugin name:
+### Direct Skill Load
 
 ```
-omo-awesome-subagents:agent-name
+skill("omo-awesome-subagents:terraform-engineer")
 ```
 
-For example: `omo-awesome-subagents:api-designer`, `omo-awesome-subagents:python-pro`.
+### Combining Multiple Skills
 
-## Categories
+```
+task(
+    prompt="Set up a secure Kubernetes deployment with Terraform",
+    load_skills=["omo-awesome-subagents:kubernetes-specialist", "omo-awesome-subagents:terraform-engineer"]
+)
+```
 
-The 127 skills span 10 categories:
+## Architecture Overview
 
-- `01-core-development`
-- `02-language-specialists`
-- `03-infrastructure`
-- `04-quality-security`
-- `05-data-ai`
-- `06-developer-experience`
-- `07-specialized-domains`
-- `08-business-product`
-- `09-meta-orchestration`
-- `10-research-analysis`
+This plugin provides two types of content:
 
-## Category Mapping
+**Flagship Agents (13)**: Callable subagents via `task(subagent_type="omo-awesome-subagents:name")`. Each is a READ-ONLY specialist with focused tools for deep analysis and recommendations.
 
-| OMO Category | Example Agents |
-|--------------|----------------|
-| deep | api-designer, python-pro, frontend-developer |
-| deep | rust-engineer, cpp-pro, golang-pro |
-| deep | kubernetes-specialist, terraform-engineer, incident-responder |
-| deep | security-auditor, code-reviewer, penetration-tester |
-| ultrabrain | llm-architect, mlops-engineer, data-analyst |
-| deep | documentation-specialist, performance-optimizer, accessibility-specialist |
-| deep | blockchain-developer, embedded-systems, game-developer |
-| writing | product-manager, technical-writer, ux-researcher |
-| unspecified-high | agent-organizer (excluded), workflow-orchestrator (excluded) |
-| unspecified-high | docs-researcher, browser-debugger, patent-analyst |
+**Skills (127)**: Injectable knowledge modules via `skill("omo-awesome-subagents:name")` or `load_skills=[...]`. All 13 flagships also have skill equivalents.
+
+## Flagship Agents
+
+| Agent | Description |
+|-------|-------------|
+| `blockchain-developer` | Blockchain and smart contract development |
+| `code-reviewer` | Code quality, design clarity, and risk assessment |
+| `cpp-pro` | Production C++ with modern standards |
+| `embedded-systems` | Embedded systems and firmware engineering |
+| `game-developer` | Game development across engines and platforms |
+| `golang-pro` | Production Go with concurrency patterns |
+| `kubernetes-specialist` | Kubernetes architecture, operations, and debugging |
+| `llm-architect` | LLM system design, prompt engineering, and RAG |
+| `mlops-engineer` | ML pipeline design, model deployment, and monitoring |
+| `penetration-tester` | Security testing and vulnerability assessment |
+| `rust-engineer` | Production Rust with safety and performance |
+| `security-auditor` | Security audit and compliance assessment |
+| `terraform-engineer` | Infrastructure-as-code with Terraform |
+
+## Skill Categories
+
+These are logical groupings for reference, not directory structures. All skills are stored flat in `skills/<skill-name>/SKILL.md`.
+
+| Category | Description | Example Skills |
+|----------|-------------|----------------|
+| Core Development | Core programming and software design | `python-pro`, `javascript-pro`, `refactoring-specialist` |
+| Language Specialists | Programming language experts | `rust-engineer`, `golang-pro`, `swift-expert` |
+| Infrastructure | Cloud, DevOps, and platform engineering | `kubernetes-specialist`, `terraform-engineer`, `docker-expert` |
+| Quality and Security | Testing, security, and code quality | `security-auditor`, `penetration-tester`, `qa-expert` |
+| Data and AI | Data engineering, ML, and AI | `llm-architect`, `mlops-engineer`, `data-scientist` |
+| Developer Experience | Tooling and DX optimization | `dx-optimizer`, `debugger`, `tooling-engineer` |
+| Specialized Domains | Domain-specific expertise | `blockchain-developer`, `game-developer`, `embedded-systems` |
+| Business and Product | Product and business roles | `product-manager`, `business-analyst`, `ux-researcher` |
+| Meta and Orchestration | Agent coordination and workflows | `incident-responder`, `error-coordinator` |
+| Research and Analysis | Research and analysis tasks | `docs-researcher`, `competitive-analyst`, `trend-analyst` |
 
 ## MCP Servers
 
-This plugin includes 2 MCP servers:
+This plugin includes 2 optional MCP servers:
 
-- **`openaiDeveloperDocs`**: Connects to OpenAI developer documentation for API reference lookup
-- **`chrome_devtools`**: Chrome DevTools protocol for browser debugging and automation
+| Server | Endpoint | Description |
+|--------|----------|-------------|
+| `chrome_devtools` | `http://localhost:3000/mcp` | Chrome DevTools protocol for browser debugging |
+| `openaiDeveloperDocs` | `https://developers.openai.com/mcp` | OpenAI developer documentation access |
+
+**Note:** MCP servers are optional. The plugin works without them. They provide additional capabilities when available. For `chrome_devtools`, you need a local Chrome DevTools MCP server running.
 
 ## Excluded Agents
 
-The following 8 agents are excluded as they overlap with oh-my-openagent builtins:
+The following 8 agents are excluded due to overlap with OMO builtins:
 
 - `agent-organizer`
 - `context-manager`
@@ -126,17 +157,29 @@ The following 8 agents are excluded as they overlap with oh-my-openagent builtin
 ## File Structure
 
 ```
-.claude-plugin/
-  plugin.json          # Plugin manifest (includes MCP servers)
-agents/
-  agent-name.md        # 13 flagship agent files
-skills/
-  agent-name/
-    SKILL.md           # 127 skill files
-README.md
-install-fragment.json
+omo-awesome-subagents/
+  .claude-plugin/
+    plugin.json          # Plugin manifest
+  agents/
+    *.md                 # 13 flagship agent definitions
+  skills/
+    agent-name/
+      SKILL.md           # 127 skill definitions
+  .gitignore
+  LICENSE
+  README.md
+  install-fragment.json  # Template for plugin registration
 ```
+
+## Troubleshooting
+
+| Issue | Fix |
+|-------|-----|
+| Plugin not found | Check `installPath` is the correct absolute path. Restart OMO. |
+| Agent not recognized | Use the full namespace: `omo-awesome-subagents:agent-name` |
+| MCP server errors | MCP servers are optional. Plugin works without them. |
+| Skills not loading | Verify the plugin is registered in `installed_plugins.json` |
 
 ## License
 
-[MIT License](LICENSE)
+MIT License
