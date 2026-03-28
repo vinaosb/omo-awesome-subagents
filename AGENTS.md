@@ -1,7 +1,7 @@
 # PROJECT KNOWLEDGE BASE
 
 **Generated:** 2026-03-28
-**Commit:** cf6d208
+**Commit:** b81075d
 **Branch:** main
 
 ## OVERVIEW
@@ -13,6 +13,8 @@ OMO/Opencode agent and skill pack — 13 flagship agents + 127 skills for domain
 ```
 .
 ├── .claude-plugin/         # Plugin manifest (Claude ecosystem only)
+├── .github/workflows/      # CI/CD pipeline
+│   └── validate.yml        # Agent/skill structure validation
 ├── agents/                 # 13 flagship agent definitions (.md)
 │   └── AGENTS.md           # Agent format documentation
 ├── skills/                 # 127 skill definitions (flat dirs, each with SKILL.md)

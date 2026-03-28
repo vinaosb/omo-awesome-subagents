@@ -190,6 +190,8 @@ The following 8 agents are excluded due to overlap with OMO builtins:
 omo-awesome-subagents/
   .claude-plugin/
     plugin.json            # Claude plugin manifest (Claude ecosystem only)
+  .github/workflows/
+    validate.yml           # CI: agent/skill structure validation
   agents/
     *.md                   # 13 flagship agent definitions
   skills/

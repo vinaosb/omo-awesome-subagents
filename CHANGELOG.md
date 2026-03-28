@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-03-28
+
+### Added
+- GitHub Actions CI/CD workflow (`.github/workflows/validate.yml`) for agent/skill validation
+  - Validates agent frontmatter (`description`, `permission`, `mode: subagent`)
+  - Validates skill SKILL.md files (`name`, `description`)
+  - Checks skill naming convention (no dots, lowercase+hyphens only)
+  - Verifies skill name field matches directory name
+
+### Fixed
+- Fixed stale commit hash in AGENTS.md (was `cf6d208`, corrected to `b81075d`)
+- Updated AGENTS.md structure diagram to include `.github/workflows/`
+
 ## [1.1.0] - 2026-03-28
 
 ### Added

@@ -1,0 +1,111 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-structure:
+    name: Validate agents and skills
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check all agents have required frontmatter
+        run: |
+          errors=0
+          for file in agents/*.md; do
+            basename=$(basename "$file")
+            [ "$basename" = "AGENTS.md" ] && continue
+            # Check for description field
+            if ! head -20 "$file" | grep -q '^description:'; then
+              echo "ERROR: $file missing 'description:' in frontmatter"
+              errors=$((errors + 1))
+            fi
+            # Check for permission block
+            if ! head -20 "$file" | grep -q '^permission:'; then
+              echo "ERROR: $file missing 'permission:' in frontmatter"
+              errors=$((errors + 1))
+            fi
+            # Check for mode: subagent
+            if ! head -20 "$file" | grep -q '^mode: subagent'; then
+              echo "ERROR: $file missing 'mode: subagent' in frontmatter"
+              errors=$((errors + 1))
+            fi
+          done
+          if [ $errors -gt 0 ]; then
+            echo "Found $errors agent frontmatter errors"
+            exit 1
+          fi
+          echo "All agents have valid frontmatter"
+
+      - name: Check all skills have SKILL.md with required fields
+        run: |
+          errors=0
+          for dir in skills/*/; do
+            skill_name=$(basename "$dir")
+            skill_file="$dir/SKILL.md"
+            if [ ! -f "$skill_file" ]; then
+              echo "ERROR: $dir missing SKILL.md"
+              errors=$((errors + 1))
+              continue
+            fi
+            # Check for name field
+            if ! head -10 "$skill_file" | grep -q '^name:'; then
+              echo "ERROR: $skill_file missing 'name:' in frontmatter"
+              errors=$((errors + 1))
+            fi
+            # Check for description field
+            if ! head -10 "$skill_file" | grep -q '^description:'; then
+              echo "ERROR: $skill_file missing 'description:' in frontmatter"
+              errors=$((errors + 1))
+            fi
+          done
+          if [ $errors -gt 0 ]; then
+            echo "Found $errors skill validation errors"
+            exit 1
+          fi
+          echo "All skills have valid SKILL.md files"
+
+      - name: Check skill naming convention (no dots)
+        run: |
+          errors=0
+          for dir in skills/*/; do
+            skill_name=$(basename "$dir")
+            if echo "$skill_name" | grep -qP '[^a-z0-9\-]'; then
+              echo "ERROR: Skill '$skill_name' violates naming convention (must match ^[a-z0-9]+(-[a-z0-9]+)*$)"
+              errors=$((errors + 1))
+            fi
+          done
+          if [ $errors -gt 0 ]; then
+            echo "Found $errors naming convention violations"
+            exit 1
+          fi
+          echo "All skill names follow convention"
+
+      - name: Check skill name field matches directory
+        run: |
+          errors=0
+          for dir in skills/*/; do
+            skill_name=$(basename "$dir")
+            skill_file="$dir/SKILL.md"
+            [ ! -f "$skill_file" ] && continue
+            name_field=$(head -5 "$skill_file" | grep '^name:' | sed 's/name: *//')
+            if [ -n "$name_field" ] && [ "$name_field" != "$skill_name" ]; then
+              echo "ERROR: $skill_file has name '$name_field' but directory is '$skill_name'"
+              errors=$((errors + 1))
+            fi
+          done
+          if [ $errors -gt 0 ]; then
+            echo "Found $errors name/directory mismatches"
+            exit 1
+          fi
+          echo "All skill names match their directories"
+
+      - name: Count and report
+        run: |
+          agent_count=$(ls agents/*.md 2>/dev/null | grep -v AGENTS.md | wc -l)
+          skill_count=$(ls -d skills/*/ 2>/dev/null | wc -l)
+          echo "Validated $agent_count agents and $skill_count skills"
