@@ -4,14 +4,5 @@
   "description": "13 flagship subagents + 127 skills for Oh My OpenAgent and Opencode",
   "author": "Vinicius Schwinden Berkenbrock <vinaosb@gmail.com>",
   "homepage": "https://github.com/vinaosb/omo-awesome-subagents",
-  "license": "MIT",
-  "mcpServers": {
-    "chrome_devtools": {
-      "url": "http://localhost:3000/mcp",
-      "startup_timeout_sec": 20
-    },
-    "openaiDeveloperDocs": {
-      "url": "https://developers.openai.com/mcp"
-    }
-  }
+  "license": "MIT"
 }

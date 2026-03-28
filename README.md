@@ -132,14 +132,9 @@ These are logical groupings for reference, not directory structures. All skills 
 
 ## MCP Servers
 
-This plugin includes 2 optional MCP servers:
+Agents in this plugin use Opencode's **built-in tools** (file read/write/edit, grep, glob, LSP, webfetch, bash) automatically — no extra configuration needed.
 
-| Server | Endpoint | Description |
-|--------|----------|-------------|
-| `chrome_devtools` | `http://localhost:3000/mcp` | Chrome DevTools protocol for browser debugging |
-| `openaiDeveloperDocs` | `https://developers.openai.com/mcp` | OpenAI developer documentation access |
-
-**Note:** MCP servers are optional. The plugin works without them. They provide additional capabilities when available. For `chrome_devtools`, you need a local Chrome DevTools MCP server running.
+If you configure additional MCP servers in your `opencode.json` (e.g., Context7 for docs, Sentry for errors, Grep.app for GitHub code search), those tools are **also automatically available** to all plugin agents and skills. This is handled by Opencode's config merging — plugins don't need to declare MCP servers themselves.
 
 ## Excluded Agents
 
@@ -177,7 +172,7 @@ omo-awesome-subagents/
 |-------|-----|
 | Plugin not found | Check `installPath` is the correct absolute path. Restart OMO. |
 | Agent not recognized | Use the full namespace: `omo-awesome-subagents:agent-name` |
-| MCP server errors | MCP servers are optional. Plugin works without them. |
+| MCP server errors | Remove the MCP entry from your `opencode.json`. MCP servers are user-configured, not plugin-provided. |
 | Skills not loading | Verify the plugin is registered in `installed_plugins.json` |
 
 ## License

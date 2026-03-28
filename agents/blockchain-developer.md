@@ -2,6 +2,8 @@
 name: blockchain-developer
 description: Use when a task needs blockchain or Web3 implementation and review across
   smart-contract integration, wallet flows, or transaction lifecycle handling.
+tools: read, write, edit, grep, glob, bash, lsp_symbols, lsp_diagnostics, lsp_goto_definition,
+  lsp_find_references, lsp_prepare_rename, lsp_rename
 ---
 
 > **Reasoning effort: high**

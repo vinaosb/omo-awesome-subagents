@@ -2,6 +2,8 @@
 name: rust-engineer
 description: Use when a task needs Rust expertise for ownership-heavy systems code,
   async runtime behavior, or performance-sensitive implementation.
+tools: read, write, edit, grep, glob, bash, lsp_symbols, lsp_diagnostics, lsp_goto_definition,
+  lsp_find_references, lsp_prepare_rename, lsp_rename
 ---
 
 > **Reasoning effort: high**

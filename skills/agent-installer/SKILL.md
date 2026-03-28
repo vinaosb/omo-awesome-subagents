@@ -1,7 +1,7 @@
 ---
 name: agent-installer
 description: Use when a task needs help selecting, copying, or organizing custom agent
-  files from this repository into Codex agent directories.
+  files from this repository into Opencode agent directories.
 ---
 
 - trigger-to-agent matching with minimal overlap and redundancy
