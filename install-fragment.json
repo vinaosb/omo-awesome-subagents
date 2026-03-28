@@ -1,0 +1,8 @@
+{
+  "name": "omo-awesome-subagents",
+  "marketplace": "local",
+  "scope": "local",
+  "version": "1.0.0",
+  "installPath": "<REPO_ROOT>",
+  "lastUpdated": "2026-03-27T05:45:31.608161+00:00"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "omo-awesome-subagents",
+  "version": "1.0.0",
+  "description": "13 flagship subagents + 127 skills for Oh My OpenAgent and Opencode",
+  "author": "omo-awesome",
+  "mcpServers": {
+    "chrome_devtools": {
+      "url": "http://localhost:3000/mcp",
+      "startup_timeout_sec": 20
+    },
+    "openaiDeveloperDocs": {
+      "url": "https://developers.openai.com/mcp"
+    }
+  }
+}

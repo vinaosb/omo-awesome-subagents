@@ -1,6 +1,3 @@
-# Generated plugin output (regenerable via convert_toml_to_plugin.py)
-plugin-output/
-
 # Python
 __pycache__/
 *.pyc
