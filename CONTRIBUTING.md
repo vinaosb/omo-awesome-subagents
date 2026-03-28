@@ -1,6 +1,6 @@
 # Contributing to omo-awesome-subagents
 
-This plugin provides 13 flagship subagents and 127 skills for Oh My OpenAgent (OMO) and Opencode. Contributions welcome!
+This collection provides 13 flagship subagents and 127 skills for Oh My OpenAgent (OMO) and Opencode. Contributions welcome!
 
 ## Prerequisites
 
@@ -13,15 +13,17 @@ This plugin provides 13 flagship subagents and 127 skills for Oh My OpenAgent (O
 ### Step 1: Create the skill directory
 
 ```
-skills/your-agent-name/
+skills/your-skill-name/
   SKILL.md
 ```
+
+**Naming rules:** Directory name must be lowercase alphanumeric with single hyphens, 1-64 characters. Regex: `^[a-z0-9]+(-[a-z0-9]+)*$`. The directory name must match the `name:` field in the frontmatter.
 
 ### Step 2: Write SKILL.md with frontmatter
 
 ```markdown
 ---
-name: your-agent-name
+name: your-skill-name
 description: Use when a task needs [specific capability]. Keep to one sentence.
 ---
 
@@ -49,12 +51,15 @@ Flagship agents are the 13 primary callable subagents. These should only be adde
 agents/your-agent-name.md
 ```
 
+**Reviewer agent** (read-only analysis):
+
 ```markdown
 ---
-name: your-agent-name
 description: Use when a task needs [specific capability].
-tools: read, grep, glob, lsp_symbols, lsp_diagnostics, lsp_goto_definition,
-  lsp_find_references, lsp_prepare_rename, lsp_rename
+mode: subagent
+permission:
+  edit: deny
+  bash: deny
 ---
 
 > **Reasoning effort: high**
@@ -81,14 +86,58 @@ Quality checks:
 
 Return:
 - [what the agent returns]
+
+Do not [closing constraint referencing "parent agent"].
 ```
 
-**Key rules for flagship agents:**
-- Must be READ-ONLY (no file modifications)
+**Implementer agent** (can modify files):
+
+```markdown
+---
+description: Use when a task needs [specific capability].
+mode: subagent
+permission:
+  edit: allow
+  bash: allow
+---
+
+> **Reasoning effort: high**
+
+[One paragraph describing the agent's philosophy and approach]
+
+Working mode:
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+4. [Step 4]
+
+Focus on:
+- [area 1]
+- [area 2]
+
+Quality checks:
+- [check 1]
+- [check 2]
+
+Return:
+- [what the agent returns]
+
+Do not [closing constraint referencing "parent agent"].
+```
+
+### Key rules for flagship agents
+
+- `description` is REQUIRED — Opencode uses this for agent discovery
+- `mode: subagent` is REQUIRED — makes agent invocable by other agents
+- `permission` controls tool access — only `edit`, `bash`, `webfetch`, `skill`, `task` are configurable
+- All other tools (read, grep, glob, lsp_*) are available by default
+- Do NOT use `name:` — Opencode derives the name from the filename
+- Do NOT use `tools:` — this field is deprecated, use `permission:` instead
 - Must include reasoning effort level
 - Must have working mode steps (typically 4)
 - Must list focus areas and quality checks
 - Must define a return format
+- Must end with a "Do not" constraint
 
 ## Skill vs Agent: When to Use Which
 
@@ -105,12 +154,14 @@ Return:
 - No emojis in agent/skill files
 - Keep descriptions concise (agents should be specialists, not generalists)
 - Use American English spelling
+- Skill body uses dash-prefixed bullets only (no headings)
 
 ## Testing Your Contribution
 
-1. Load the skill locally and verify it injects correctly
-2. Test with a real task that matches the skill's domain
-3. Verify the frontmatter parses correctly
+1. Run `install.sh` or `install.ps1` to install locally
+2. Load the skill and verify it injects correctly
+3. Test with a real task that matches the skill's domain
+4. Verify the frontmatter parses correctly
 
 ## Pull Request Process
 

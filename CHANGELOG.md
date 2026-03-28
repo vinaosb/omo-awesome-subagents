@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - 13 flagship subagents as callable OMO/Opencode agents
 - 127 skills as injectable knowledge modules
-- Plugin manifest (`.claude-plugin/plugin.json`) with MCP server definitions
+- Plugin manifest (`.claude-plugin/plugin.json`) for Claude ecosystem compatibility
 - `install-fragment.json` template for plugin registration
 - MIT License
 
