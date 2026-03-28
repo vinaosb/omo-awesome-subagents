@@ -1,9 +1,10 @@
 ---
-name: mlops-engineer
 description: Use when a task needs model deployment, registry, pipeline, monitoring,
   or environment orchestration for machine learning systems.
-tools: read, write, edit, grep, glob, bash, lsp_symbols, lsp_diagnostics, lsp_goto_definition,
-  lsp_find_references, lsp_prepare_rename, lsp_rename
+mode: subagent
+permission:
+  edit: allow
+  bash: allow
 ---
 
 > **Reasoning effort: high**

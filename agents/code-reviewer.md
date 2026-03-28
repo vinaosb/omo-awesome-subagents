@@ -1,9 +1,10 @@
 ---
-name: code-reviewer
 description: Use when a task needs a broader code-health review covering maintainability,
   design clarity, and risky implementation choices in addition to correctness.
-tools: read, grep, glob, lsp_symbols, lsp_diagnostics, lsp_goto_definition, lsp_find_references,
-  lsp_prepare_rename, lsp_rename
+mode: subagent
+permission:
+  edit: deny
+  bash: deny
 ---
 
 > **Reasoning effort: high**

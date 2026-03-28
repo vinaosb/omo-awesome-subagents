@@ -1,9 +1,10 @@
 ---
-name: security-auditor
 description: Use when a task needs focused security review of code, auth flows, secrets
   handling, input validation, or infrastructure configuration.
-tools: read, grep, glob, lsp_symbols, lsp_diagnostics, lsp_goto_definition, lsp_find_references,
-  lsp_prepare_rename, lsp_rename
+mode: subagent
+permission:
+  edit: deny
+  bash: deny
 ---
 
 > **Reasoning effort: high**

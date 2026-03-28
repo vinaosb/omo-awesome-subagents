@@ -1,9 +1,10 @@
 ---
-name: penetration-tester
 description: Use when a task needs adversarial review of an application path for exploitability,
   abuse cases, or practical attack surface analysis.
-tools: read, grep, glob, lsp_symbols, lsp_diagnostics, lsp_goto_definition, lsp_find_references,
-  lsp_prepare_rename, lsp_rename
+mode: subagent
+permission:
+  edit: deny
+  bash: deny
 ---
 
 > **Reasoning effort: high**

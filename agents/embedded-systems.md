@@ -1,9 +1,10 @@
 ---
-name: embedded-systems
 description: Use when a task needs embedded or hardware-adjacent work involving device
   constraints, firmware boundaries, timing, or low-level integration.
-tools: read, write, edit, grep, glob, bash, lsp_symbols, lsp_diagnostics, lsp_goto_definition,
-  lsp_find_references, lsp_prepare_rename, lsp_rename
+mode: subagent
+permission:
+  edit: allow
+  bash: allow
 ---
 
 > **Reasoning effort: high**

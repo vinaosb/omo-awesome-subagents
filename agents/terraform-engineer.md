@@ -1,9 +1,10 @@
 ---
-name: terraform-engineer
 description: Use when a task needs Terraform module design, plan review, state-aware
   change analysis, or IaC refactoring.
-tools: read, grep, glob, lsp_symbols, lsp_diagnostics, lsp_goto_definition, lsp_find_references,
-  lsp_prepare_rename, lsp_rename
+mode: subagent
+permission:
+  edit: deny
+  bash: deny
 ---
 
 > **Reasoning effort: high**
